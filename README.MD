@@ -7,7 +7,7 @@ Your friendly realtime IP Blacklist platform, made with [`Actix-web`](https://ac
 - MongoDB Integration
 - JWT Authentication: Secure access to the API endpoints with JSON Web Tokens.
 - RESTful API: Clean and well-documented RESTful API for interacting with the platform.
-- Malicious URL Blocking: Members can add URLs to block malicious links. This URL request can be blocked to prevent future access attempts.
+- Malicious URL Blocking: Members can add URLs to block malicious links.
 
 ## Authors
 - [@harmoniousmoss](https://www.github.com/harmoniousmoss)
