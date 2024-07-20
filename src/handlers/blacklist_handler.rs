@@ -1,7 +1,12 @@
 use crate::models::BlacklistedIp;
 use actix_web::{web, HttpResponse, Responder};
 use futures::stream::StreamExt;
-use mongodb::{bson, options::FindOptions, Client, Collection};
+use mongodb::{
+    bson::{self, doc, oid::ObjectId},
+    options::FindOptions,
+    Client, Collection,
+};
+
 use serde::Deserialize;
 
 // Define a helper struct for deserializing incoming data
@@ -11,7 +16,7 @@ pub struct InputData {
 }
 
 // Post request handler to add a new IP to the blacklist
-pub async fn add_blacklisted_ip(
+pub async fn add_blacklist_ip(
     db_client: web::Data<Client>,
     data: web::Json<InputData>,
 ) -> impl Responder {
@@ -31,7 +36,7 @@ pub async fn add_blacklisted_ip(
 }
 
 // Get all blocked IPs
-pub async fn get_all_blocked_ips(db_client: web::Data<Client>) -> impl Responder {
+pub async fn get_all_blacklist_ip(db_client: web::Data<Client>) -> impl Responder {
     let collection: Collection<BlacklistedIp> = db_client
         .database("rustkeeper")
         .collection("blacklisted_ips");
@@ -54,4 +59,28 @@ pub async fn get_all_blocked_ips(db_client: web::Data<Client>) -> impl Responder
     }
 
     HttpResponse::Ok().json(results)
+}
+
+// Get a single blacklisted IP by ID
+pub async fn get_blacklist_ip_by_id(
+    db_client: web::Data<Client>,
+    path: web::Path<String>,
+) -> impl Responder {
+    let collection: Collection<BlacklistedIp> = db_client
+        .database("rustkeeper")
+        .collection("blacklisted_ips");
+
+    let id_str = path.into_inner();
+    let oid = match ObjectId::parse_str(&id_str) {
+        // Corrected method here
+        Ok(oid) => oid,
+        Err(_) => return HttpResponse::BadRequest().body("Invalid ID format"),
+    };
+
+    let filter = doc! { "_id": oid };
+    match collection.find_one(filter, None).await {
+        Ok(Some(blacklisted_ip)) => HttpResponse::Ok().json(blacklisted_ip),
+        Ok(None) => HttpResponse::NotFound().body("No entry found with the provided ID"),
+        Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
+    }
 }
