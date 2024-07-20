@@ -1,2 +1,2 @@
 pub mod blacklist_handler;
-pub use blacklist_handler::add_blacklisted_ip;
+pub use blacklist_handler::{add_blacklisted_ip, get_all_blocked_ips};
