@@ -1,17 +1,15 @@
+mod handlers;
+mod models;
+
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use dotenv::dotenv;
 use mongodb::{options::ClientOptions, Client};
 use std::env;
 
+use crate::handlers::add_blacklisted_ip;
+
 async fn greet() -> impl Responder {
     HttpResponse::Ok().body("Rust Keeper Here")
-}
-
-async fn check_mongo_connection() -> impl Responder {
-    match connect_to_mongo().await {
-        Ok(_) => HttpResponse::Ok().body("Successfully connected to MongoDB"),
-        Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
-    }
 }
 
 async fn connect_to_mongo() -> mongodb::error::Result<Client> {
@@ -23,14 +21,19 @@ async fn connect_to_mongo() -> mongodb::error::Result<Client> {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-    let bind_address = "127.0.0.1:8080";
+    let bind_address = env::var("BIND_ADDRESS").unwrap_or_else(|_| "127.0.0.1:8080".to_string());
+
+    let mongo_client = connect_to_mongo()
+        .await
+        .expect("Failed to connect to MongoDB");
 
     println!("Rust Keeper running on http://{}", bind_address);
 
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
+            .app_data(web::Data::new(mongo_client.clone()))
             .route("/", web::get().to(greet))
-            .route("/check-mongo", web::get().to(check_mongo_connection))
+            .route("/blacklist-ip", web::post().to(add_blacklisted_ip))
     })
     .bind(bind_address)?
     .run()
