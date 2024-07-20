@@ -1,5 +1,5 @@
 # RustKeeper
-Your friendly realtime IP Blacklist platform, made with [`Actix`](https://actix.rs/) and [`CockroachDB`](https://www.cockroachlabs.com/)
+Your friendly realtime IP Blacklist platform, made with [`Actix`](https://actix.rs/) and [`MongoDB`](https://www.mongodb.com/)
 
 ## Development in plan
 - IP Blacklisting: Add, remove, and manage IP addresses in a blacklist.
