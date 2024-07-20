@@ -23,7 +23,7 @@ async fn connect_to_mongo() -> mongodb::error::Result<Client> {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-    let bind_address = env::var("BIND_ADDRESS").unwrap_or_else(|_| "127.0.0.1:8080".to_string());
+    let bind_address = env::var("BIND_ADDRESS").unwrap_or_else(|_| "0.0.0.0:8080".to_string());
 
     let mongo_client = connect_to_mongo()
         .await
