@@ -6,7 +6,7 @@ use dotenv::dotenv;
 use mongodb::{options::ClientOptions, Client};
 use std::env;
 
-use crate::handlers::add_blacklisted_ip;
+use crate::handlers::{add_blacklisted_ip, get_all_blocked_ips};
 
 async fn greet() -> impl Responder {
     HttpResponse::Ok().body("Rust Keeper Here")
@@ -34,6 +34,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(mongo_client.clone()))
             .route("/", web::get().to(greet))
             .route("/blacklist-ip", web::post().to(add_blacklisted_ip))
+            .route("/blocked-ips", web::get().to(get_all_blocked_ips))
     })
     .bind(bind_address)?
     .run()
