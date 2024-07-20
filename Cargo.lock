@@ -373,7 +373,7 @@ dependencies = [
  "serde_bytes",
  "serde_json",
  "time",
- "uuid",
+ "uuid 1.10.0",
 ]
 
 [[package]]
@@ -1096,7 +1096,7 @@ dependencies = [
  "trust-dns-proto",
  "trust-dns-resolver",
  "typed-builder",
- "uuid",
+ "uuid 1.10.0",
  "webpki-roots",
 ]
 
@@ -1348,6 +1348,7 @@ name = "rust_keeper"
 version = "0.1.0"
 dependencies = [
  "actix-web",
+ "bson",
  "chrono",
  "dotenv",
  "futures",
@@ -1355,6 +1356,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
+ "uuid 0.8.2",
 ]
 
 [[package]]
@@ -1924,6 +1926,16 @@ dependencies = [
  "form_urlencoded",
  "idna 0.5.0",
  "percent-encoding",
+]
+
+[[package]]
+name = "uuid"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
+dependencies = [
+ "getrandom",
+ "serde",
 ]
 
 [[package]]
