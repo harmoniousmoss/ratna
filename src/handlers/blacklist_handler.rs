@@ -33,7 +33,7 @@ pub async fn add_blacklisted_ip(
 // Get all blocked IPs
 pub async fn get_all_blocked_ips(db_client: web::Data<Client>) -> impl Responder {
     let collection: Collection<BlacklistedIp> = db_client
-        .database("your_database_name")
+        .database("rustkeeper")
         .collection("blacklisted_ips");
 
     let filter = bson::doc! { "status": "blocked" };
