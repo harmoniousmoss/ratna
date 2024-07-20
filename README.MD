@@ -8,7 +8,3 @@ Your friendly realtime IP Blacklist platform, made with [`Actix-web`](https://ac
 - JWT Authentication: Secure access to the API endpoints with JSON Web Tokens.
 - RESTful API: Clean and well-documented RESTful API for interacting with the platform.
 - Malicious URL Blocking: Members can add URLs to block malicious links.
-
-## Authors
-- [@harmoniousmoss](https://www.github.com/harmoniousmoss)
-
