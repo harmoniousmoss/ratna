@@ -2,7 +2,7 @@ use crate::models::MaliciousUrl;
 use actix_web::{web, HttpResponse, Responder};
 use futures::stream::StreamExt;
 use mongodb::{
-    bson::{self, doc},
+    bson::{self, doc, oid::ObjectId},
     options::FindOptions,
     Client, Collection,
 };
@@ -58,4 +58,28 @@ pub async fn get_all_blacklist_url(db_client: web::Data<Client>) -> impl Respond
     }
 
     HttpResponse::Ok().json(results)
+}
+
+// Get a single blocked URL by ID
+pub async fn get_blacklist_url_by_id(
+    db_client: web::Data<Client>,
+    path: web::Path<String>,
+) -> impl Responder {
+    let collection: Collection<MaliciousUrl> = db_client
+        .database("rustkeeper")
+        .collection("malicious_urls");
+
+    let id_str = path.into_inner();
+    let oid = match ObjectId::parse_str(&id_str) {
+        // Corrected method here
+        Ok(oid) => oid,
+        Err(_) => return HttpResponse::BadRequest().body("Invalid ID format"),
+    };
+
+    let filter = doc! { "_id": oid };
+    match collection.find_one(filter, None).await {
+        Ok(Some(malicious)) => HttpResponse::Ok().json(malicious),
+        Ok(None) => HttpResponse::NotFound().body("No entry found with the provided ID"),
+        Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
+    }
 }
