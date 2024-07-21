@@ -83,3 +83,30 @@ pub async fn get_blacklist_url_by_id(
         Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
     }
 }
+
+// Delete a single blocked URL by ID
+pub async fn delete_blacklist_url_by_id(
+    db_client: web::Data<Client>,
+    path: web::Path<String>,
+) -> impl Responder {
+    let collection: Collection<MaliciousUrl> = db_client
+        .database("rustkeeper")
+        .collection("malicious_urls");
+
+    let id_str = path.into_inner();
+    let oid = match ObjectId::parse_str(&id_str) {
+        Ok(oid) => oid,
+        Err(_) => return HttpResponse::BadRequest().body("Invalid ID format"),
+    };
+
+    match collection.delete_one(doc! { "_id": oid }, None).await {
+        Ok(delete_result) => {
+            if delete_result.deleted_count == 1 {
+                HttpResponse::Ok().json("Malicious URL successfully deleted")
+            } else {
+                HttpResponse::NotFound().body("No entry found with the provided ID")
+            }
+        }
+        Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
+    }
+}
