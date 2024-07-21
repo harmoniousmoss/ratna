@@ -8,7 +8,7 @@ use std::env;
 
 use crate::handlers::{
     add_blacklist_ip, add_blacklist_url, delete_blacklist_ip_by_id, get_all_blacklist_ip,
-    get_blacklist_ip_by_id,
+    get_all_blacklist_url, get_blacklist_ip_by_id,
 };
 
 async fn greet() -> impl Responder {
@@ -46,6 +46,7 @@ async fn main() -> std::io::Result<()> {
             )
             // Malicious url endpoint
             .route("/blacklist-url", web::post().to(add_blacklist_url))
+            .route("/blacklist-url", web::get().to(get_all_blacklist_url))
     })
     .bind(bind_address)?
     .run()
