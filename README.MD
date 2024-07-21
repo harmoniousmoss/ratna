@@ -1,5 +1,5 @@
 # RustKeeper
-Your friendly realtime IP Blacklist platform, made with [`Actix-web`](https://actix.rs/) (Rust) and [`MongoDB`](https://www.mongodb.com/)
+Your Friendly Real-Time IP & Malicious Link Blacklist Platform, made with [`Actix-web`](https://actix.rs/) (Rust) and [`MongoDB`](https://www.mongodb.com/)
 
 ## Development in plan
 - IP Blacklisting
