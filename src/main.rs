@@ -7,7 +7,8 @@ use mongodb::{options::ClientOptions, Client};
 use std::env;
 
 use crate::handlers::{
-    add_blacklist_ip, delete_blacklist_ip_by_id, get_all_blacklist_ip, get_blacklist_ip_by_id,
+    add_blacklist_ip, add_blacklist_url, delete_blacklist_ip_by_id, get_all_blacklist_ip,
+    get_blacklist_ip_by_id,
 };
 
 async fn greet() -> impl Responder {
@@ -35,6 +36,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(mongo_client.clone()))
             .route("/", web::get().to(greet))
+            // Blacklist url endpoint
             .route("/blacklist-ip", web::post().to(add_blacklist_ip))
             .route("/blacklist-ip", web::get().to(get_all_blacklist_ip))
             .route("/blacklist-ip/{id}", web::get().to(get_blacklist_ip_by_id))
@@ -42,6 +44,8 @@ async fn main() -> std::io::Result<()> {
                 "/blacklist-ip/{id}",
                 web::delete().to(delete_blacklist_ip_by_id),
             )
+            // Malicious url endpoint
+            .route("/blacklist-url", web::post().to(add_blacklist_url))
     })
     .bind(bind_address)?
     .run()
