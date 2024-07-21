@@ -4,4 +4,6 @@ pub use blacklist_handler::{
 };
 
 pub mod malicious_handler;
-pub use malicious_handler::{add_blacklist_url, get_all_blacklist_url, get_blacklist_url_by_id};
+pub use malicious_handler::{
+    add_blacklist_url, delete_blacklist_url_by_id, get_all_blacklist_url, get_blacklist_url_by_id,
+};
