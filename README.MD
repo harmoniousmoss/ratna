@@ -8,3 +8,4 @@ Your friendly real-Time IP & malicious link blacklist platform, made with [`Acti
 - JWT Authentication
 - RESTful API
 - Malicious URL Blocking
+- Etc
