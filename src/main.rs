@@ -8,8 +8,8 @@ use std::env;
 
 use crate::handlers::{
     add_blacklist_ip, add_blacklist_url, delete_blacklist_ip_by_id, delete_blacklist_url_by_id,
-    edit_blacklist_ip_by_id, get_all_blacklist_ip, get_all_blacklist_url, get_blacklist_ip_by_id,
-    get_blacklist_url_by_id,
+    edit_blacklist_ip_by_id, edit_blacklist_url_by_id, get_all_blacklist_ip, get_all_blacklist_url,
+    get_blacklist_ip_by_id, get_blacklist_url_by_id,
 };
 
 async fn greet() -> impl Responder {
@@ -56,6 +56,10 @@ async fn main() -> std::io::Result<()> {
             .route(
                 "/blacklist-url/{id}",
                 web::delete().to(delete_blacklist_url_by_id),
+            )
+            .route(
+                "/blacklist-url/{id}",
+                web::put().to(edit_blacklist_url_by_id),
             )
     })
     .bind(bind_address)?
