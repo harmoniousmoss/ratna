@@ -123,7 +123,7 @@ pub struct UpdateInputData {
 pub async fn edit_blacklist_ip_by_id(
     db_client: web::Data<Client>,
     path: web::Path<String>,
-    data: web::Json<UpdateInputData>, // Data for the update
+    data: web::Json<UpdateInputData>,
 ) -> impl Responder {
     let collection: Collection<BlacklistedIp> = db_client
         .database("rustkeeper")
@@ -139,7 +139,7 @@ pub async fn edit_blacklist_ip_by_id(
         "$set": {
             "ip_address": &data.ip_address,
             "status": &data.status,
-            "updated_at": bson::DateTime::now(),  // Assuming you have an 'updated_at' field to modify
+            "updated_at": bson::DateTime::now(),  // Automatically update the 'updated_at' field
         }
     };
 
