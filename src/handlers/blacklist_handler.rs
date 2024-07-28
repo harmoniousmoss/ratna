@@ -112,6 +112,7 @@ pub async fn delete_blacklist_ip_by_id(
     }
 }
 
+// Define a helper struct for deserializing incoming data
 #[derive(Debug, Deserialize)]
 pub struct UpdateInputData {
     pub ip_address: String,
