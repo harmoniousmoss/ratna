@@ -12,7 +12,7 @@ use crate::handlers::{
 };
 
 async fn greet() -> impl Responder {
-    HttpResponse::Ok().body("Rust Keeper Here")
+    HttpResponse::Ok().body("Brigatory Here")
 }
 
 async fn connect_to_mongo() -> mongodb::error::Result<Client> {
@@ -30,7 +30,7 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("Failed to connect to MongoDB");
 
-    println!("Rust Keeper running on http://{}", bind_address);
+    println!("Brigatory running on http://{}", bind_address);
 
     HttpServer::new(move || {
         App::new()
