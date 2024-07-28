@@ -111,3 +111,49 @@ pub async fn delete_blacklist_ip_by_id(
         Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
     }
 }
+
+#[derive(Debug, Deserialize)]
+pub struct UpdateInputData {
+    pub ip_address: String,
+    pub status: String,
+}
+
+// Update a blacklisted IP by ID
+pub async fn edit_blacklist_ip_by_id(
+    db_client: web::Data<Client>,
+    path: web::Path<String>,
+    data: web::Json<UpdateInputData>, // Data for the update
+) -> impl Responder {
+    let collection: Collection<BlacklistedIp> = db_client
+        .database("rustkeeper")
+        .collection("blacklisted_ips");
+
+    let id_str = path.into_inner();
+    let oid = match ObjectId::parse_str(&id_str) {
+        Ok(oid) => oid,
+        Err(_) => return HttpResponse::BadRequest().body("Invalid ID format"),
+    };
+
+    let update = doc! {
+        "$set": {
+            "ip_address": &data.ip_address,
+            "status": &data.status,
+            "updated_at": bson::DateTime::now(),  // Assuming you have an 'updated_at' field to modify
+        }
+    };
+
+    match collection
+        .update_one(doc! { "_id": oid }, update, None)
+        .await
+    {
+        Ok(update_result) => {
+            if update_result.modified_count == 1 {
+                HttpResponse::Ok().json("Blacklisted IP successfully updated")
+            } else {
+                HttpResponse::NotFound()
+                    .body("No entry found with the provided ID or no changes made")
+            }
+        }
+        Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
+    }
+}
