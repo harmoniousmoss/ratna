@@ -110,3 +110,50 @@ pub async fn delete_blacklist_url_by_id(
         Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
     }
 }
+
+// Define a helper struct for deserializing incoming data
+#[derive(Debug, Deserialize)]
+pub struct UpdateInputData {
+    pub url: String,
+    pub status: String,
+}
+
+// Update a malicious url by ID
+pub async fn edit_blacklist_url_by_id(
+    db_client: web::Data<Client>,
+    path: web::Path<String>,
+    data: web::Json<UpdateInputData>,
+) -> impl Responder {
+    let collection: Collection<MaliciousUrl> = db_client
+        .database("rustkeeper")
+        .collection("malicious_urls");
+
+    let id_str = path.into_inner();
+    let oid = match ObjectId::parse_str(&id_str) {
+        Ok(oid) => oid,
+        Err(_) => return HttpResponse::BadRequest().body("Invalid ID format"),
+    };
+
+    let update = doc! {
+        "$set": {
+            "url": &data.url,
+            "status": &data.status,
+            "updated_at": bson::DateTime::now(),  // Automatically update the 'updated_at' field
+        }
+    };
+
+    match collection
+        .update_one(doc! { "_id": oid }, update, None)
+        .await
+    {
+        Ok(update_result) => {
+            if update_result.modified_count == 1 {
+                HttpResponse::Ok().json("Malicious URL successfully updated")
+            } else {
+                HttpResponse::NotFound()
+                    .body("No entry found with the provided ID or no changes made")
+            }
+        }
+        Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
+    }
+}
