@@ -1,7 +1,9 @@
+mod db;
 mod handlers;
 mod models;
 
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use db::seed::seed_admin;
 use dotenv::dotenv;
 use mongodb::{options::ClientOptions, Client};
 use std::env;
@@ -30,6 +32,12 @@ async fn main() -> std::io::Result<()> {
     let mongo_client = connect_to_mongo()
         .await
         .expect("Failed to connect to MongoDB");
+
+    // Seed the admin user
+    if let Err(e) = seed_admin(web::Data::new(mongo_client.clone())).await {
+        eprintln!("Failed to seed admin user: {}", e);
+        return Ok(()); // Or return an error if seeding failure should stop the server
+    }
 
     println!("Brigatory running on http://{}", bind_address);
 
