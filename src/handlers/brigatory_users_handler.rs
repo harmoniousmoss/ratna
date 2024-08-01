@@ -1,8 +1,10 @@
+use crate::auth::generate_jwt;
 use crate::models::BrigatoryUser;
 use actix_web::{web, HttpResponse, Responder};
 use bcrypt::{hash, verify, DEFAULT_COST};
 use mongodb::{bson::doc, Client, Collection};
 use serde::Deserialize;
+use serde::Serialize;
 
 #[derive(Debug, Deserialize)]
 pub struct SignupData {
@@ -15,6 +17,22 @@ pub struct SignupData {
 pub struct SigninData {
     pub email: String,
     pub password: String,
+}
+
+#[derive(Debug, Serialize)]
+struct SigninResponse {
+    token: String,
+    user: UserInfo,
+}
+
+#[derive(Debug, Serialize)]
+struct UserInfo {
+    _id: Option<bson::oid::ObjectId>,
+    full_name: String,
+    email: String,
+    status: String,
+    created_at: chrono::DateTime<chrono::Utc>,
+    updated_at: chrono::DateTime<chrono::Utc>,
 }
 
 // Handler for user signup
@@ -65,7 +83,31 @@ pub async fn signin(db_client: web::Data<Client>, data: web::Json<SigninData>) -
 
     // Verify the password
     match verify(&data.password, &user.password) {
-        Ok(true) => HttpResponse::Ok().json("Signin successful"),
+        Ok(true) => {
+            // Generate the JWT token
+            match generate_jwt(&user.email) {
+                Ok(token) => {
+                    // Create the user info response
+                    let user_info = UserInfo {
+                        _id: user._id.clone(),
+                        full_name: user.full_name.clone(),
+                        email: user.email.clone(),
+                        status: user.status.clone(),
+                        created_at: user.created_at,
+                        updated_at: user.updated_at,
+                    };
+
+                    // Create the signin response
+                    let response = SigninResponse {
+                        token,
+                        user: user_info,
+                    };
+
+                    HttpResponse::Ok().json(response)
+                }
+                Err(_) => HttpResponse::InternalServerError().body("Error generating token"),
+            }
+        }
         Ok(false) => HttpResponse::Unauthorized().body("Invalid email or password"),
         Err(_) => HttpResponse::InternalServerError().body("Error verifying password"),
     }
