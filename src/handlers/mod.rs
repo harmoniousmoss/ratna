@@ -9,3 +9,6 @@ pub use malicious_handler::{
     add_blacklist_url, delete_blacklist_url_by_id, edit_blacklist_url_by_id, get_all_blacklist_url,
     get_blacklist_url_by_id,
 };
+
+pub mod brigatory_users_handler;
+pub use brigatory_users_handler::signup;
