@@ -1,4 +1,7 @@
 src
+ ┣ db
+ ┃ ┣ mod.rs
+ ┃ ┗ seed.rs
  ┣ handlers
  ┃ ┣ blacklist_handler.rs
  ┃ ┣ brigatory_users_handler.rs
