@@ -11,4 +11,4 @@ pub use malicious_handler::{
 };
 
 pub mod brigatory_users_handler;
-pub use brigatory_users_handler::signup;
+pub use brigatory_users_handler::{signin, signup};
