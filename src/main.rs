@@ -8,6 +8,7 @@ mod routes;
 use actix_web::{web, App, HttpServer};
 use db::seed::seed_admin;
 use dotenv::dotenv;
+use env_logger::Env;
 use mongodb::{options::ClientOptions, Client};
 use std::env;
 
@@ -19,6 +20,7 @@ async fn connect_to_mongo() -> mongodb::error::Result<Client> {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init_from_env(Env::default().default_filter_or("info"));
     dotenv().ok();
     let bind_address = env::var("BIND_ADDRESS").unwrap_or_else(|_| "127.0.0.1:8080".to_string());
 

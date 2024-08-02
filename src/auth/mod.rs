@@ -1,12 +1,11 @@
-// src/auth/mod.rs
-
 use jsonwebtoken::{encode, EncodingKey, Header};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Claims {
-    sub: String,
-    exp: usize,
+pub struct Claims {
+    // Make the Claims struct public
+    pub sub: String,
+    pub exp: usize,
 }
 
 pub fn generate_jwt(email: &str) -> Result<String, jsonwebtoken::errors::Error> {
