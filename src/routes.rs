@@ -4,7 +4,7 @@ use actix_web::{web, HttpResponse};
 use crate::handlers::{
     add_blacklist_ip, add_blacklist_url, delete_blacklist_ip_by_id, delete_blacklist_url_by_id,
     edit_blacklist_ip_by_id, edit_blacklist_url_by_id, get_all_blacklist_ip, get_all_blacklist_url,
-    get_blacklist_ip_by_id, get_blacklist_url_by_id, signin, signup,
+    get_blacklist_ip_by_id, get_blacklist_url_by_id, is_blacklist_url, signin, signup,
 };
 
 pub fn configure_routes(cfg: &mut web::ServiceConfig) {
@@ -32,6 +32,10 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
                 .route(web::get().to(get_blacklist_url_by_id))
                 .route(web::delete().to(delete_blacklist_url_by_id).wrap(JwtAuth))
                 .route(web::put().to(edit_blacklist_url_by_id).wrap(JwtAuth)),
+        )
+        .service(
+            web::resource("/check-blacklist") // Add this route
+                .route(web::post().to(is_blacklist_url)),
         )
         // User endpoints
         .service(web::resource("/signup").route(web::post().to(signup)))
