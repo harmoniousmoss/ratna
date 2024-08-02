@@ -1,3 +1,5 @@
+// src/handlers/malicious_handler.rs
+
 use crate::models::MaliciousUrl;
 use actix_web::{web, HttpResponse, Responder};
 use futures::stream::StreamExt;
