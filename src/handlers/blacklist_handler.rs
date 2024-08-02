@@ -157,3 +157,39 @@ pub async fn edit_blacklist_ip_by_id(
         Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
     }
 }
+
+#[derive(Debug, Deserialize)]
+pub struct CheckIpInput {
+    pub ip_address: String,
+}
+
+// Check if IP is in the blacklist
+pub async fn is_blacklist_ip(
+    db_client: web::Data<Client>,
+    data: web::Json<CheckIpInput>,
+) -> impl Responder {
+    println!("Received request to check IP: {:?}", data.ip_address); // Add logging
+
+    let collection: Collection<BlacklistedIp> = db_client
+        .database("rustkeeper")
+        .collection("blacklisted_ips");
+
+    let filter = doc! { "ip_address": &data.ip_address, "status": "blocked" };
+
+    println!("Query filter: {:?}", filter); // Add logging
+
+    match collection.find_one(filter, None).await {
+        Ok(Some(result)) => {
+            println!("IP is blacklisted: {:?}", result); // Add logging
+            HttpResponse::Ok().json(true) // IP is blacklisted
+        }
+        Ok(None) => {
+            println!("IP is not blacklisted: {:?}", data.ip_address); // Add logging
+            HttpResponse::Ok().json(false) // IP is not blacklisted
+        }
+        Err(e) => {
+            println!("Error checking blacklist: {}", e); // Add logging
+            HttpResponse::InternalServerError().json(e.to_string())
+        }
+    }
+}
