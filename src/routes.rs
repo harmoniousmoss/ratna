@@ -1,5 +1,4 @@
-// src/routes.rs
-
+use crate::middleware::jwt_auth::JwtAuth;
 use actix_web::{web, HttpResponse};
 
 use crate::handlers::{
@@ -13,14 +12,14 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
         // Blacklist IP endpoints
         .service(
             web::resource("/blacklist-ip")
-                .route(web::post().to(add_blacklist_ip))
+                .route(web::post().to(add_blacklist_ip).wrap(JwtAuth))
                 .route(web::get().to(get_all_blacklist_ip)),
         )
         .service(
             web::resource("/blacklist-ip/{id}")
                 .route(web::get().to(get_blacklist_ip_by_id))
-                .route(web::delete().to(delete_blacklist_ip_by_id))
-                .route(web::put().to(edit_blacklist_ip_by_id)),
+                .route(web::delete().to(delete_blacklist_ip_by_id).wrap(JwtAuth))
+                .route(web::put().to(edit_blacklist_ip_by_id).wrap(JwtAuth)),
         )
         // Blacklist URL endpoints
         .service(
