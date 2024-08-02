@@ -157,3 +157,48 @@ pub async fn edit_blacklist_url_by_id(
         Err(e) => HttpResponse::InternalServerError().json(e.to_string()),
     }
 }
+
+// Check if URL is in the blacklist
+pub async fn is_blacklist_url(
+    db_client: web::Data<Client>,
+    data: web::Json<InputData>,
+) -> impl Responder {
+    println!("Received request to check URL: {:?}", data.url); // Add logging
+
+    let collection: Collection<MaliciousUrl> = db_client
+        .database("rustkeeper")
+        .collection("malicious_urls");
+
+    // Create a different filter for the root URL
+    let filter = if data.url == "/" {
+        doc! {
+            "url": "/",
+            "status": "blocked"
+        }
+    } else {
+        doc! {
+            "$or": [
+                { "url": &data.url },
+                { "url": { "$regex": &format!("{}.*", &data.url), "$options": "i" } },
+            ],
+            "status": "blocked"
+        }
+    };
+
+    println!("Query filter: {:?}", filter); // Add logging
+
+    match collection.find_one(filter, None).await {
+        Ok(Some(result)) => {
+            println!("URL is blacklisted: {:?}", result); // Add logging
+            HttpResponse::Ok().json(true) // URL is blacklisted
+        }
+        Ok(None) => {
+            println!("URL is not blacklisted: {:?}", data.url); // Add logging
+            HttpResponse::Ok().json(false) // URL is not blacklisted
+        }
+        Err(e) => {
+            println!("Error checking blacklist: {}", e); // Add logging
+            HttpResponse::InternalServerError().json(e.to_string())
+        }
+    }
+}
