@@ -359,12 +359,14 @@ dependencies = [
 name = "brigatory"
 version = "0.1.0"
 dependencies = [
+ "actix-service",
  "actix-web",
  "bcrypt",
  "bson",
  "chrono",
  "dotenv",
  "futures",
+ "futures-util",
  "jsonwebtoken",
  "mongodb",
  "serde",
