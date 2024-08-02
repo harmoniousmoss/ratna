@@ -1,4 +1,6 @@
 src
+ ┣ auth
+ ┃ ┗ mod.rs
  ┣ db
  ┃ ┣ mod.rs
  ┃ ┗ seed.rs
@@ -7,12 +9,16 @@ src
  ┃ ┣ brigatory_users_handler.rs
  ┃ ┣ malicious_handler.rs
  ┃ ┗ mod.rs
+ ┣ middleware
+ ┃ ┣ jwt_auth.rs
+ ┃ ┗ mod.rs
  ┣ models
  ┃ ┣ blacklisted_ip.rs
  ┃ ┣ brigatory_users.rs
  ┃ ┣ malicious.rs
  ┃ ┗ mod.rs
- ┗ main.rs
+ ┣ main.rs
+ ┗ routes.rs
  target
  .env
  .gitignore

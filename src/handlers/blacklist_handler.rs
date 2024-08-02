@@ -72,7 +72,6 @@ pub async fn get_blacklist_ip_by_id(
 
     let id_str = path.into_inner();
     let oid = match ObjectId::parse_str(&id_str) {
-        // Corrected method here
         Ok(oid) => oid,
         Err(_) => return HttpResponse::BadRequest().body("Invalid ID format"),
     };
