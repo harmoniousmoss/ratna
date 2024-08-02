@@ -58,6 +58,7 @@ pub async fn signup(db_client: web::Data<Client>, data: web::Json<SignupData>) -
 }
 
 // Handler for user signin
+// Handler for user signin
 pub async fn signin(db_client: web::Data<Client>, data: web::Json<SigninData>) -> impl Responder {
     let collection: Collection<BrigatoryUser> = db_client
         .database("rustkeeper")
