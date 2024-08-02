@@ -4,8 +4,13 @@ use actix_web::dev::{ServiceRequest, ServiceResponse};
 use actix_web::{Error, HttpResponse};
 use futures_util::future::{ok, LocalBoxFuture, Ready};
 use jsonwebtoken::{decode, DecodingKey, Validation};
+use serde::Deserialize;
+use serde_json::json;
 use std::rc::Rc;
 use std::task::{Context, Poll};
+
+#[derive(Debug, Deserialize)]
+struct Claims;
 
 pub struct JwtAuth;
 
@@ -55,7 +60,7 @@ where
                     let token = auth_str.trim_start_matches("Bearer ").trim();
 
                     let validation = Validation::default();
-                    if let Ok(_token_data) = decode::<serde_json::Value>(
+                    if let Ok(_token_data) = decode::<Claims>(
                         token,
                         &DecodingKey::from_secret("your_secret_key".as_ref()),
                         &validation,
@@ -71,8 +76,10 @@ where
         }
 
         Box::pin(async move {
-            let response = HttpResponse::Unauthorized().finish();
-            Ok(req.into_response(response).map_into_right_body())
+            let response = HttpResponse::Unauthorized()
+                .json(json!({"error": "Unauthorized", "message": "Token missing or invalid"}))
+                .map_into_right_body();
+            Ok(req.into_response(response))
         })
     }
 }
