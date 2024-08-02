@@ -24,14 +24,14 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
         // Blacklist URL endpoints
         .service(
             web::resource("/blacklist-url")
-                .route(web::post().to(add_blacklist_url))
+                .route(web::post().to(add_blacklist_url).wrap(JwtAuth))
                 .route(web::get().to(get_all_blacklist_url)),
         )
         .service(
             web::resource("/blacklist-url/{id}")
                 .route(web::get().to(get_blacklist_url_by_id))
-                .route(web::delete().to(delete_blacklist_url_by_id))
-                .route(web::put().to(edit_blacklist_url_by_id)),
+                .route(web::delete().to(delete_blacklist_url_by_id).wrap(JwtAuth))
+                .route(web::put().to(edit_blacklist_url_by_id).wrap(JwtAuth)),
         )
         // User endpoints
         .service(web::resource("/signup").route(web::post().to(signup)))
