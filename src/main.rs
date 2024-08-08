@@ -22,7 +22,10 @@ async fn connect_to_mongo() -> mongodb::error::Result<Client> {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(Env::default().default_filter_or("info"));
     dotenv().ok();
-    let bind_address = env::var("BIND_ADDRESS").unwrap_or_else(|_| "127.0.0.1:8080".to_string());
+
+    // Get the port from the environment variable, default to 8080
+    let port = env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    let bind_address = format!("0.0.0.0:{}", port);
 
     let mongo_client = connect_to_mongo()
         .await
