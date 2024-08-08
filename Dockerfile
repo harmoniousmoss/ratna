@@ -47,8 +47,11 @@ RUN chown -R appuser:appgroup /app
 # Switch to the non-root user
 USER appuser
 
+# Ensure the application uses the PORT environment variable
+ENV PORT 8080
+
 # Expose the port that the application will run on
 EXPOSE 8080
 
 # Set the command to run the application
-CMD ["brigatory"]
+CMD ["sh", "-c", "brigatory"]
