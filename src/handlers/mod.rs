@@ -12,3 +12,6 @@ pub use malicious_handler::{
 
 pub mod brigatory_users_handler;
 pub use brigatory_users_handler::{signin, signup};
+
+pub mod check_rate_limit_handler; // Add this line to include the rate_limit_handler module
+pub use check_rate_limit_handler::check_rate_limit; // Add this line to
