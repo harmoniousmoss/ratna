@@ -37,7 +37,7 @@ pub async fn check_rate_limit(
                     let elapsed_time = now - last_request_time;
 
                     if elapsed_time <= 1 {
-                        if rate_limit_entry.request_count >= 2 {
+                        if rate_limit_entry.request_count >= 10 {
                             println!("Rate limit exceeded for IP: {}", req.ip_address);
                             return HttpResponse::TooManyRequests().json("Rate limit exceeded");
                         } else {
