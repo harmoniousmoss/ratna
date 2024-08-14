@@ -3,10 +3,10 @@ Your friendly real-Time rate limiter, IP and malicious link blacklist platform, 
 
 ## Development in plan
 - [x] IP Blacklisting
-- Real-time Updates
-- MongoDB Integration
-- JWT Authentication
-- RESTful API
-- Malicious URL Blocking
-- Rate Limiting
-- Etc
+- [x] Real-time Updates
+- [x] MongoDB Integration
+- [x] JWT Authentication
+- [x] RESTful API
+- [x] Malicious URL Blocking
+- [x] Rate Limiting
+- [x] Etc
