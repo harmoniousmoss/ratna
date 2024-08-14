@@ -1,5 +1,5 @@
 # Brigatory
-Your friendly real-Time rate limiter, IP and malicious link blacklist platform, made with [`Actix-web`](https://actix.rs/) (Rust) and [`MongoDB`](https://www.mongodb.com/)
+Your friendly real-Time rate limiter, IP and malicious link blacklist services, made with [`Actix-web`](https://actix.rs/) (Rust) and [`MongoDB`](https://www.mongodb.com/)
 
 ## Development in plan
 - [x] IP Blacklisting
