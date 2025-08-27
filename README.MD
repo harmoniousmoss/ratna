@@ -1,5 +1,5 @@
-# Brigatory
-Your friendly real-Time rate limiter, IP and malicious link blacklist services, made with [`Actix-web`](https://actix.rs/) (Rust) and [`MongoDB`](https://www.mongodb.com/)
+# Ratna - Security & Rate Limiting Service
+Ratna is a comprehensive security service built with Rust and Actix Web that provides real-time IP blacklisting, malicious URL blocking, and rate limiting capabilities. Features MongoDB integration, JWT authentication, RESTful API design, and Docker containerization.
 
 ## Development in plan
 - [x] IP Blacklisting
